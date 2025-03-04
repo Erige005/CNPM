@@ -1,6 +1,6 @@
 # CNPM
 # cấu trúc thư mục
-ungdung
+D: ungdung
 ├── package.json
 ├── server.js
 └── public
