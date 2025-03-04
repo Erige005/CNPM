@@ -8,8 +8,8 @@ ungdung
     ├── login.js
     └── styles.css
 # mẫu csdl
-CREATE DATABASE mydb;
-USE mydb;
+CREATE DATABASE app;
+USE app;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
