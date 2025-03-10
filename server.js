@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const bcrypt = require('bcrypt'); // ✅ Move bcrypt import to the top
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,41 +34,80 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// 4. Route POST /login: xử lý đăng nhập
+// 4. Route GET /search: Trả về file search.html
+app.get('/search', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'search.html'));
+});
+
+// 5. Route gốc /
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
+// 6. Route POST /login: Xử lý đăng nhập
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Truy vấn bảng users trong MySQL
-  const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  db.query(sql, [username, password], (err, results) => {
+  const sql = 'SELECT * FROM users WHERE username = ?';
+  db.query(sql, [username], async (err, results) => {
     if (err) {
-      console.error('Lỗi truy vấn MySQL: ', err);
+      console.error('Lỗi truy vấn MySQL:', err);
       return res.json({ success: false, message: 'Có lỗi xảy ra.' });
     }
 
-    if (results.length > 0) {
-        // Đăng nhập thành công
-      // => Ở đây ta trả về success: true, kèm theo URL trang search
+    if (results.length === 0) {
+      return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
+    }
+
+    // So sánh mật khẩu với hash trong database
+    const user = results[0];
+    const match = await bcrypt.compare(password, user.password);
+
+    if (match) {
       return res.json({ success: true, redirect: '/search' });
     } else {
-      // Sai thông tin
       return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
   });
 });
 
-// 5. Route gốc /: chuyển hướng sang /login hoặc file index.html
-app.get('/', (req, res) => {
-  // Ví dụ, chuyển hướng thẳng đến /login
-  res.redirect('/login');
+// 7. Route POST /signup: Xử lý đăng ký
+app.post('/signup', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Kiểm tra xem username đã tồn tại chưa
+  const checkUserSql = 'SELECT * FROM users WHERE username = ?';
+  db.query(checkUserSql, [username], (err, results) => {  // ✅ Removed unnecessary async
+    if (err) {
+      console.error('Lỗi truy vấn MySQL:', err);
+      return res.json({ success: false, message: 'Có lỗi xảy ra.' });
+    }
+
+    if (results.length > 0) {
+      return res.json({ success: false, message: 'Tên đăng nhập đã tồn tại' });
+    }
+
+    // Hash password trước khi lưu vào database
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+      if (err) {
+        console.error('Lỗi hash mật khẩu:', err);
+        return res.json({ success: false, message: 'Có lỗi xảy ra.' });
+      }
+
+      // Chèn tài khoản mới vào MySQL
+      const insertSql = 'INSERT INTO users (username, password) VALUES (?, ?)';
+      db.query(insertSql, [username, hashedPassword], (err, result) => {
+        if (err) {
+          console.error('Lỗi thêm user:', err);
+          return res.json({ success: false, message: 'Có lỗi xảy ra.' });
+        }
+        return res.json({ success: true });
+      });
+    });
+  });
 });
 
-app.get('/search', (req, res) => {
-  // Gửi về file search.html (tạo sẵn trong thư mục public)
-  res.sendFile(path.join(__dirname, 'public', 'search.html'));
-});
-
-// 6. Khởi chạy server
+// 8. Khởi chạy server ✅ Move app.listen to the bottom
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });
