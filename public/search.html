@@ -2,31 +2,22 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Tìm kiếm từ điển</title>
-  <link rel="stylesheet" href="styles.css"> <!-- nếu muốn dùng chung CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Từ điển tiếng Nhật</title>
+  <link rel="stylesheet" href="search.css">
 </head>
 <body>
-  <h1>Trang Tìm kiếm</h1>
-  <p>Xin chào! Bạn đã đăng nhập thành công.</p>
-
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Nhập từ cần tìm" />
-    <button id="searchBtn">Tìm kiếm</button>
+  <div class="container">
+    <h1>Từ điển tiếng Nhật</h1>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Nhập từ cần tra cứu (ví dụ: 青い)" />
+      <button id="searchBtn">Tìm kiếm</button>
+    </div>
+    <div id="results">
+      <!-- Kết quả trả về sẽ hiển thị ở đây -->
+    </div>
   </div>
 
-  <!-- Sau này bạn có thể tích hợp gọi API ở file này hoặc file riêng -->
-  <script>
-    const searchBtn = document.getElementById('searchBtn');
-    const searchInput = document.getElementById('searchInput');
-
-    searchBtn.addEventListener('click', () => {
-      const keyword = searchInput.value.trim();
-      if (keyword) {
-        // Gọi API từ điển ở đây, hoặc gửi request đến server
-        // Ví dụ tạm in ra console:
-        console.log('Tìm kiếm:', keyword);
-      }
-    });
-  </script>
+  <script src="search.js"></script>
 </body>
 </html>
