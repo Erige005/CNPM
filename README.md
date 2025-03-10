@@ -17,5 +17,4 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL
 );
 
-INSERT INTO users (username, password) VALUES ('admin', '123456');
 
