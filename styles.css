@@ -1,0 +1,139 @@
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Bố cục chính */
+.container {
+    display: grid;
+    grid-template-columns: 250px 1fr; /* Cột 1: 250px (menu) | Cột 2: Toàn bộ phần còn lại */
+    grid-template-rows: 60px 1fr; /* Hàng 1: 60px (header) | Hàng 2: Nội dung */
+    height: 100vh;
+}
+
+/* Slidebar */
+.sidebar {
+    background: linear-gradient(to bottom, #3E67D6, #2A3C7E);
+    color: white;
+    padding: 10px;
+    grid-row: 1 / 3;
+}
+
+.sidebar h2 {
+    text-align: center; 
+    font-family: 'Mansalva';
+    font-size: 30px;
+    color: white;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+    padding: 10px 25px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.sidebar ul li:hover {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.sidebar ul li.active {
+    background: #E4ECFB;
+    color: black;
+}
+
+/* .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    transition: background 0.3s;
+    border-radius: 20px;
+}
+
+.sidebar ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+} */
+
+.menu-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    color: white;
+}
+
+.menu-icon:hover{
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    color: #3558B6;
+}
+
+.sidebar ul li.active .menu-icon {
+    color: #3E67D6;
+}
+
+/* Khung đăng nhập */
+header {
+    background: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background: #3E67D6;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+button:hover {
+    background: #3252AC;
+    cursor: pointer;
+}
+
+.user-box img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Nội dung chính */
+.content {
+    padding: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
