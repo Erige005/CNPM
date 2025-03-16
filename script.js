@@ -1,21 +1,5 @@
-function showContent(sectionId) {
-    // Ẩn tất cả nội dung
-    document.querySelectorAll('.content section').forEach(section => {
-        section.style.display = 'none';
-    });
-
-    // Hiển thị nội dung được chọn
-    document.getElementById(sectionId).style.display = 'block';
-
-    document.querySelectorAll('.sidebar ul li').forEach(item => {
-        item.classList.remove('active');
-    });
-
-    // Thêm class active cho mục menu được chọn
-    const activeMenuItem = document.querySelector(`.sidebar ul li[onclick="showContent('${sectionId}')"]`);
-    if (activeMenuItem) {
-        activeMenuItem.classList.add('active');
-    }
+function navigate(page) {
+    window.location.href = page;
 }
 
 
