@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',          // Thay bằng user của bạn
-  password: 'chitogeABVs32',          // Thay bằng mật khẩu của bạn
+  password: '123456',          // Thay bằng mật khẩu của bạn
   database: 'app'       // Tên database đã tạo
 });
 
