@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const bcrypt = require('bcrypt'); // ✅ Move bcrypt import to the top
+const bcrypt = require('bcrypt'); // ✅ import bcrypt
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 // 1. Kết nối MySQL
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',          // Thay bằng user của bạn
-  password: 'chitogeABVs32',          // Thay bằng mật khẩu của bạn
-  database: 'app'       // Tên database đã tạo
+  user: 'root',            // Thay bằng user của bạn
+  password: 'chitogeABVs32',  // Thay bằng mật khẩu của bạn
+  database: 'app'         // Tên database đã tạo
 });
 
 db.connect((err) => {
@@ -27,21 +27,42 @@ db.connect((err) => {
 // 2. Cấu hình middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Cho phép truy cập các file tĩnh
+app.use(express.static(__dirname));
 
 // 3. Route GET /login: trả về file login.html
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// 4. Route GET /search: Trả về file search.html
+// 4. Route GET /search: trả về file search.html
 app.get('/search', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'search.html'));
 });
 
-// 5. Route gốc /
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
+
+// 5. Route gốc /: hiển thị index.html
+
 app.get('/', (req, res) => {
-  res.redirect('/login');
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Các route cho các file HTML khác nằm cùng thư mục
+app.get('/dictionary.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dictionary.html'));
+});
+app.get('/flashcard.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'flashcard.html'));
+});
+app.get('/jlpt.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'jlpt.html'));
+});
+app.get('/chatbot.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'chatbot.html'));
 });
 
 // 6. Route POST /login: Xử lý đăng nhập
@@ -59,25 +80,27 @@ app.post('/login', (req, res) => {
       return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
 
-    // So sánh mật khẩu với hash trong database
     const user = results[0];
+    // So sánh password với hash trong database
     const match = await bcrypt.compare(password, user.password);
 
     if (match) {
-      return res.json({ success: true, redirect: '/search' });
+      // Sau khi đăng nhập thành công, chuyển hướng đến /index.html
+      return res.redirect('/index.html');
     } else {
       return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
   });
 });
 
+
 // 7. Route POST /signup: Xử lý đăng ký
-app.post('/signup', async (req, res) => {
+app.post('/signup', (req, res) => {
   const { username, password } = req.body;
 
   // Kiểm tra xem username đã tồn tại chưa
   const checkUserSql = 'SELECT * FROM users WHERE username = ?';
-  db.query(checkUserSql, [username], (err, results) => {  // ✅ Removed unnecessary async
+  db.query(checkUserSql, [username], (err, results) => {
     if (err) {
       console.error('Lỗi truy vấn MySQL:', err);
       return res.json({ success: false, message: 'Có lỗi xảy ra.' });
@@ -87,27 +110,27 @@ app.post('/signup', async (req, res) => {
       return res.json({ success: false, message: 'Tên đăng nhập đã tồn tại' });
     }
 
-    // Hash password trước khi lưu vào database
+    // Hash password trước khi lưu
     bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
         console.error('Lỗi hash mật khẩu:', err);
         return res.json({ success: false, message: 'Có lỗi xảy ra.' });
       }
 
-      // Chèn tài khoản mới vào MySQL
+      // Thêm user vào database
       const insertSql = 'INSERT INTO users (username, password) VALUES (?, ?)';
       db.query(insertSql, [username, hashedPassword], (err, result) => {
         if (err) {
           console.error('Lỗi thêm user:', err);
           return res.json({ success: false, message: 'Có lỗi xảy ra.' });
         }
-        return res.json({ success: true });
+        return res.redirect('/login');
       });
     });
   });
 });
 
-// 8. Khởi chạy server ✅ Move app.listen to the bottom
+// 8. Khởi chạy server
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });
