@@ -78,31 +78,43 @@ header {
     color: black;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 0 20px;
 }
 
-button {
-    padding: 10px;
-    border: none;
-    background: #3E67D6;
-    color: white;
+#userIcon {
+    font-family: 'Material Symbols Outlined';
+    font-size: 30px;
+    color: #333;
     cursor: pointer;
+    transition: color 0.3s;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 30;
+}
+
+.user-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    transition: background-color 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    display: none;
+    z-index: 1000;
+    min-width: 120px;
 }
 
-button:hover {
-    background: #3252AC;
+.dropdown-menu div {
+    padding: 10px 20px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
-.user-box img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: inline-block;
-    vertical-align: middle;
+.dropdown-menu div:hover {
+    background-color: #f0f0f0;
 }
 
 /* Nội dung chính */
