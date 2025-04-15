@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ứng dụng học tiếng Nhật</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/jlpt.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mansalva">
@@ -40,16 +41,15 @@
 
         <main class="content">
             <h1>Đề thi JLPT</h1>
-            <p>Bạn có thể luyện thi JLPT ngay trên trang này.</p>
 
 
-<!-- Các nút chọn đề -->
-<div class="test-selector">
-    <button onclick="loadTest('test_N3_0724.json')">ĐỀ N3 07/2024</button>
-    <button onclick="loadTest('test_N3_1223.json')">ĐỀ N3 12/2023</button>
-  </div>
-  
-  <div id="test-container"></div>   
+            <!-- Các nút chọn đề -->
+            <div class="test-selector">
+                <button onclick="loadTest('test_N3_0724.json')">ĐỀ N3 07/2024</button>
+                <button onclick="loadTest('test_N3_1223.json')">ĐỀ N3 12/2023</button>
+            </div>
+            
+            <div id="test-container"></div>   
         </main>
     </div>
 

@@ -68,7 +68,7 @@ function loadTest(filename) {
       const submitBtn = document.createElement("button");
       submitBtn.id = "submit-btn";
       submitBtn.textContent = "Nộp bài";
-      submitBtn.style = "margin-left: 20px; background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;";
+      //submitBtn.style = "margin-left: 20px; background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;";
       submitBtn.addEventListener("click", () => {
         clearInterval(timerInterval);
         submitTest();
