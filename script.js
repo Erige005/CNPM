@@ -263,8 +263,18 @@ function startTimer(durationInSeconds) {
     const chatBox = document.getElementById("chat-box");
     const message = document.createElement("div");
     message.className = `message ${sender}-message`;
-    message.textContent = text;
+    message.innerHTML = marked.parse(text);
     chatBox.appendChild(message);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
+
+  // Cho phép nhấn Enter để tìm kiếm
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("question");
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        askGemini();
+      }
+    });
+  });
   
