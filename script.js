@@ -16,7 +16,6 @@ window.addEventListener("click", (e) => {
     }
 });
 
-// Demo sự kiện (thay bằng logic thực tế nếu có đăng nhập)
 document.getElementById("logoutBtn").addEventListener("click", () => {
     window.location.href = "public/login.html";
 });
