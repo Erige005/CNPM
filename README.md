@@ -17,4 +17,11 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL
 );
 
+#mẫu csdl flash card
+CREATE TABLE flashcards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    front VARCHAR(255) NOT NULL,  -- Ví dụ: "青い"
+    back VARCHAR(255) NOT NULL,   -- Ví dụ: "màu xanh"
+    pass_count INT DEFAULT 0      -- Số lần pass liên tục
+);
 
