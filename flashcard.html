@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcard học từ vựng</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mansalva">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng học tiếng Nhật</title>
+    <link rel="stylesheet" href="css/flashcard.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 </head>
 <body>
   <div class="container">
@@ -33,15 +33,19 @@
           </ul>
       </aside>
 
-      <!-- Khung đăng nhập -->
-      <header class="user-box">
-          <button id="login-btn" onclick="window.location.href='/login'">Đăng nhập</button>
-          <img id="user-avatar" src="default-avatar.png" alt="Avatar" style="display: none;">
-      </header> 
+        <!-- Khung đăng nhập -->
+        <header class="user-box">
+            <h2>Flashcard</h2>
+            <div class="user-dropdown">
+                <span class="material-symbols-outlined user-icon" id="userIcon">account_circle</span>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div id="logoutBtn">Đăng xuất</div>
+                </div>
+            </div>
+        </header>
 
       <main class="content">
           <section id="flashcardSection">
-              <h1>Flashcard học từ vựng</h1>
               <div id="flashcardContainer">
                   <!-- Nội dung flashcard sẽ được load ở đây thông qua flashcard.js -->
                   <p>Đang tải flashcard...</p>

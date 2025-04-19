@@ -54,8 +54,12 @@ function displayCurrentFlashcard(showAnswer) {
         <p><strong>Đáp án:</strong> ${card.back}</p>
       </div>
       <div class="card-actions">
-        <button id="passBtn">Pass</button>
-        <button id="failBtn">Fail</button>
+        <button id="passBtn">
+          <span class="material-symbols-outlined">check</span>
+        </button>
+        <button id="failBtn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
       </div>
     `;
   
