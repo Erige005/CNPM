@@ -17,7 +17,6 @@ window.addEventListener("click", (e) => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-    window.location.href = "public/login.html";
+    window.location.href = "login";
 });
-
 

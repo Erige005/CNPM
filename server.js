@@ -30,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Cho phép truy cập các file tĩnh
 app.use(express.static(__dirname));
+app.use('/css', express.static(path.join(__dirname, 'css')));
 
 // 3. Các route HTML cơ bản
 app.get('/login', (req, res) => {
