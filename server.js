@@ -28,6 +28,10 @@ db.connect((err) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
 // Cho phép truy cập các file tĩnh
 app.use(express.static(__dirname));
 app.use('/css', express.static(path.join(__dirname, 'css')));
@@ -45,7 +49,7 @@ app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
-app.get('/', (req, res) => {
+app.get('/index.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -53,7 +57,7 @@ app.get('/dictionary.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'dictionary.html'));
 });
 app.get('/flashcard.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'flashcard.html'));
+  res.sendFile(path.join(__dirname, 'flashcard.html'));
 });
 app.get('/jlpt.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'jlpt.html'));
@@ -64,6 +68,27 @@ app.get('/chatbot.html', (req, res) => {
 
 // 4. Route POST /login
 app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const sql = 'SELECT * FROM users WHERE username = ?';
+  db.query(sql, [username], async (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn MySQL:', err);
+      return res.json({ success: false, message: 'Có lỗi xảy ra.' });
+    }
+    if (results.length === 0) {
+      return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
+    }
+    const user = results[0];
+    const match = await bcrypt.compare(password, user.password);
+    if (match) {
+      return res.redirect('/index.html');
+    } else {
+      return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
+    }
+  });
+});
+
+app.post('/', (req, res) => {
   const { username, password } = req.body;
   const sql = 'SELECT * FROM users WHERE username = ?';
   db.query(sql, [username], async (err, results) => {
