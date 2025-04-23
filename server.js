@@ -211,7 +211,7 @@ app.post('/flashcard/fail', (req, res) => {
 });
 
 app.post('/flashcard/reset', (req, res) => {
-  const sql = 'UPDATE flashcards SET pass_count = 0, is_active = 1';
+  const sql = 'UPDATE flashcards SET pass_count = 0, fail_count = 0, pass_total = 0, is_active = 1';
   db.query(sql, (err, result) => {
     if (err) {
       return res.json({ success: false, message: "Lỗi khi reset flashcards" });
@@ -221,21 +221,35 @@ app.post('/flashcard/reset', (req, res) => {
 });
 
 app.get('/flashcard/summary', (req, res) => {
-  const sql = `
-    SELECT 
-      front, 
-      pass_total, 
-      fail_count,
-      ROUND(
-        CASE WHEN (pass_total + fail_count) = 0 THEN 0
-        ELSE pass_total / (pass_total + fail_count) * 100 END
-      , 2) AS pass_rate
-    FROM flashcards
-    ORDER BY front ASC
-  `;
-  db.query(sql, (err, results) => {
-    if (err) return res.json({ success: false, message: "Lỗi truy vấn summary" });
-    return res.json({ success: true, summary: results });
+  // Kiểm tra nếu tất cả các flashcards đều không còn active
+  const checkActiveSql = `SELECT COUNT(*) AS inactiveCount FROM flashcards WHERE is_active = 1`;
+  
+  db.query(checkActiveSql, (err, result) => {
+    if (err) return res.json({ success: false, message: "Lỗi truy vấn kiểm tra active" });
+
+    // Nếu còn bất kỳ flashcard nào is_active = 1, không hiển thị bảng thông báo chúc mừng
+    if (result[0].inactiveCount > 0) {
+      return res.json({ success: false, message: "Chưa hoàn thành tất cả flashcards." });
+    }
+
+    // Nếu tất cả đều không active, trả về bảng thống kê
+    const sql = `
+      SELECT 
+        front, 
+        pass_total, 
+        fail_count,
+        ROUND(
+          CASE WHEN (pass_total + fail_count) = 0 THEN 0
+          ELSE pass_total / (pass_total + fail_count) * 100 END
+        , 2) AS pass_rate
+      FROM flashcards
+      ORDER BY front ASC
+    `;
+    
+    db.query(sql, (err, results) => {
+      if (err) return res.json({ success: false, message: "Lỗi truy vấn summary" });
+      return res.json({ success: true, summary: results });
+    });
   });
 });
 

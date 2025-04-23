@@ -19,6 +19,19 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     });
   }
+
+  const summaryBtn = document.getElementById("summaryBtn");
+  if (summaryBtn) {
+    summaryBtn.addEventListener("click", () => {
+      const container = document.getElementById("summaryContainer");
+      // Toggle hiển thị
+      if (container.innerHTML.trim() !== "") {
+        container.innerHTML = "";
+        return;
+      }
+      loadSummary();
+    });
+  }
 });
 
 let flashcards = [];
@@ -38,6 +51,45 @@ function loadAllFlashcards() {
     })
     .catch(err => {
        document.getElementById("flashcardContainer").innerHTML = "<p>Lỗi khi tải flashcard.</p>";
+    });
+}
+
+// Gọi API summary và render bảng
+function loadSummary() {
+  fetch('/flashcard/summary')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) {
+        alert(data.message || "Không lấy được dữ liệu thống kê.");
+        return;
+      }
+      const rows = data.summary.map(row => `
+        <tr>
+          <td>${row.front}</td>
+          <td>${row.pass_total}</td>
+          <td>${row.fail_count}</td>
+          <td>${row.pass_rate}%</td>
+        </tr>
+      `).join('');
+      const html = `
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Từ</th>
+              <th>Đã đúng</th>
+              <th>Đã sai</th>
+              <th>Tỷ lệ đúng</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+      document.getElementById('summaryContainer').innerHTML = html;
+    })
+    .catch(err => {
+      alert("Lỗi khi tải thống kê.");
     });
 }
 
