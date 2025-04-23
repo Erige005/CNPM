@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',             // Thay bằng user của bạn
-  password: 'chitogeABVs32', // Thay bằng mật khẩu của bạn
+  password: '123456', // Thay bằng mật khẩu của bạn
   database: 'app'           // Tên database đã tạo
 });
 
@@ -23,6 +23,7 @@ db.connect((err) => {
   }
   console.log('Kết nối MySQL thành công!');
 });
+
 
 // 2. Cấu hình middleware
 app.use(bodyParser.json());
@@ -76,7 +77,7 @@ app.post('/login', (req, res) => {
     const user = results[0];
     const match = await bcrypt.compare(password, user.password);
     if (match) {
-      return res.redirect('/index.html');
+      return res.json({ success: true, redirect: '/index.html' });
     } else {
       return res.json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
