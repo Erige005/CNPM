@@ -169,26 +169,26 @@ app.get('/flashcards', (req, res) => {
 // Xử lý khi nhấn Pass: tăng số lần pass, nếu đạt 3 thì xóa flashcard
 app.post('/flashcard/pass', (req, res) => {
   const { id } = req.body;
-  const selectSql = 'SELECT pass_count FROM flashcards WHERE id = ?';
-  db.query(selectSql, [id], (err, results) => {
-    if (err || results.length === 0) {
+  db.query('SELECT pass_count FROM flashcards WHERE id = ?', [id], (err, results) => {
+    if (err || results.length === 0) 
       return res.json({ success: false, message: "Không tìm thấy flashcard" });
-    }
+
     let pass_count = results[0].pass_count + 1;
+    // Luôn tăng tổng lần pass
+    const incTotalSql = 'UPDATE flashcards SET pass_total = pass_total + 1 WHERE id = ?';
+    db.query(incTotalSql, [id]);
+
     if (pass_count >= 3) {
-      const updateSql = 'UPDATE flashcards SET is_active = 0 WHERE id = ?';
-      db.query(updateSql, [id], (err, result) => {
-        if (err) {
-          return res.json({ success: false, message: "Lỗi khi ẩn flashcard" });
-        }
+      // Ẩn khi đạt 3 lần liên tiếp
+      const updateSql = 'UPDATE flashcards SET is_active = 0, pass_count = ? WHERE id = ?';
+      db.query(updateSql, [pass_count, id], err2 => {
+        if (err2) return res.json({ success: false, message: "Lỗi khi ẩn flashcard" });
         return res.json({ success: true, removed: true });
       });
     } else {
       const updateSql = 'UPDATE flashcards SET pass_count = ? WHERE id = ?';
-      db.query(updateSql, [pass_count, id], (err, result) => {
-        if (err) {
-          return res.json({ success: false, message: "Lỗi khi cập nhật flashcard" });
-        }
+      db.query(updateSql, [pass_count, id], err2 => {
+        if (err2) return res.json({ success: false, message: "Lỗi khi cập nhật flashcard" });
         return res.json({ success: true, removed: false });
       });
     }
@@ -198,11 +198,14 @@ app.post('/flashcard/pass', (req, res) => {
 // Xử lý khi nhấn Fail: reset pass_count về 0
 app.post('/flashcard/fail', (req, res) => {
   const { id } = req.body;
-  const updateSql = 'UPDATE flashcards SET pass_count = 0 WHERE id = ?';
-  db.query(updateSql, [id], (err, result) => {
-    if (err) {
-      return res.json({ success: false, message: "Lỗi khi cập nhật flashcard" });
-    }
+  // Tăng fail_count và reset pass_count
+  const updateSql = `
+    UPDATE flashcards 
+    SET pass_count = 0, fail_count = fail_count + 1 
+    WHERE id = ?
+  `;
+  db.query(updateSql, [id], err => {
+    if (err) return res.json({ success: false, message: "Lỗi khi cập nhật flashcard" });
     return res.json({ success: true });
   });
 });
@@ -214,6 +217,25 @@ app.post('/flashcard/reset', (req, res) => {
       return res.json({ success: false, message: "Lỗi khi reset flashcards" });
     }
     return res.json({ success: true, message: "Đã reset tất cả flashcards" });
+  });
+});
+
+app.get('/flashcard/summary', (req, res) => {
+  const sql = `
+    SELECT 
+      front, 
+      pass_total, 
+      fail_count,
+      ROUND(
+        CASE WHEN (pass_total + fail_count) = 0 THEN 0
+        ELSE pass_total / (pass_total + fail_count) * 100 END
+      , 2) AS pass_rate
+    FROM flashcards
+    ORDER BY front ASC
+  `;
+  db.query(sql, (err, results) => {
+    if (err) return res.json({ success: false, message: "Lỗi truy vấn summary" });
+    return res.json({ success: true, summary: results });
   });
 });
 
@@ -232,6 +254,15 @@ app.post('/flashcard/delete', (req, res) => {
     if (err) return res.json({ success: false, message: "Lỗi khi xóa từ" });
     return res.json({ success: true });
   });
+});
+
+app.post("/flashcard/reset-pass", async (req, res) => {
+  try {
+    await db.query("UPDATE flashcards SET pass_count = 0");
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false });
+  }
 });
 
 // 8. Khởi chạy server
