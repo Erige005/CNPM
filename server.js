@@ -157,7 +157,7 @@ app.post('/flashcard/add', (req, res) => {
 
 // Lấy danh sách tất cả flashcards
 app.get('/flashcards', (req, res) => {
-  const sql = 'SELECT * FROM flashcards ORDER BY id ASC';
+  const sql = 'SELECT * FROM flashcards WHERE is_active = 1 ORDER BY id ASC';
   db.query(sql, (err, results) => {
     if (err) {
       return res.json({ success: false, message: "Lỗi khi truy vấn flashcards" });
@@ -176,10 +176,10 @@ app.post('/flashcard/pass', (req, res) => {
     }
     let pass_count = results[0].pass_count + 1;
     if (pass_count >= 3) {
-      const deleteSql = 'DELETE FROM flashcards WHERE id = ?';
-      db.query(deleteSql, [id], (err, result) => {
+      const updateSql = 'UPDATE flashcards SET is_active = 0 WHERE id = ?';
+      db.query(updateSql, [id], (err, result) => {
         if (err) {
-          return res.json({ success: false, message: "Lỗi khi xóa flashcard" });
+          return res.json({ success: false, message: "Lỗi khi ẩn flashcard" });
         }
         return res.json({ success: true, removed: true });
       });
@@ -203,6 +203,33 @@ app.post('/flashcard/fail', (req, res) => {
     if (err) {
       return res.json({ success: false, message: "Lỗi khi cập nhật flashcard" });
     }
+    return res.json({ success: true });
+  });
+});
+
+app.post('/flashcard/reset', (req, res) => {
+  const sql = 'UPDATE flashcards SET pass_count = 0, is_active = 1';
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.json({ success: false, message: "Lỗi khi reset flashcards" });
+    }
+    return res.json({ success: true, message: "Đã reset tất cả flashcards" });
+  });
+});
+
+app.get('/flashcard/all', (req, res) => {
+  const sql = 'SELECT * FROM flashcards ORDER BY id ASC';
+  db.query(sql, (err, results) => {
+    if (err) return res.json({ success: false, message: "Lỗi truy vấn flashcards" });
+    return res.json({ success: true, flashcards: results });
+  });
+});
+
+app.post('/flashcard/delete', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM flashcards WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) return res.json({ success: false, message: "Lỗi khi xóa từ" });
     return res.json({ success: true });
   });
 });
