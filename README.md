@@ -28,4 +28,17 @@ CREATE TABLE flashcards (
 ALTER TABLE flashcards ADD COLUMN is_active TINYINT(1) DEFAULT 1;
 ALTER TABLE flashcards ADD COLUMN sort_order INT DEFAULT 0;
 ALTER TABLE flashcards ADD COLUMN fail_count INT DEFAULT 0;
-
+DELETE FROM flashcards;
+#update logic flash card cho mỗi user
+ALTER TABLE flashcards
+  ADD COLUMN user_id INT NULL AFTER id;
+DELETE FROM flashcards;
+ALTER TABLE flashcards
+  MODIFY COLUMN user_id INT NOT NULL,
+  ADD CONSTRAINT fk_fc_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+thêm
+npm install express-session express-mysql-session
