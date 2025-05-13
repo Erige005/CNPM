@@ -42,20 +42,41 @@ const qaData = [
     answer: "「です」は名詞の丁寧形、「ます」は動詞の丁寧形です。"
   }
 ];
+// Tính độ tương đồng đơn giản giữa hai chuỗi
+function stringSimilarity(str1, str2) {
+  const a = str1.toLowerCase().split(" ");
+  const b = str2.toLowerCase().split(" ");
+  const common = a.filter(word => b.includes(word));
+  return common.length / Math.max(a.length, b.length);
+}
 
+// Lấy ra các QA liên quan nhất
+function getTopRelevantQA(userInput, topK = 2) {
+  return qaData
+    .map(item => ({
+      ...item,
+      score: stringSimilarity(userInput, item.question)
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, topK);
+}
+
+// Tạo prompt RAG
 function buildPrompt(userInput) {
-  const context = qaData.map((item, i) => 
+  const topQA = getTopRelevantQA(userInput);
+
+  const context = topQA.map((item, i) =>
     `Q${i + 1}: ${item.question}\nA${i + 1}: ${item.answer}`
-  ).join('\n\n');
+  ).join("\n\n");
 
   return `
-あなたは日本語を教えるAIです。以下はよくある質問と回答です：
+Bạn là một AI dạy tiếng Nhật, **vui lòng trả lời hoàn toàn bằng tiếng Việt**. Dưới đây là một số hỏi-đáp mẫu:
 
 ${context}
 
-次の質問にこれらの情報を活用して丁寧に答えてください：
+Hãy sử dụng những thông tin trên (nếu phù hợp) để trả lời chi tiết và thân thiện bằng tiếng Việt:
 
-ユーザーの質問：${userInput}
+**Câu hỏi của người dùng:** ${userInput}
 `;
 }
 

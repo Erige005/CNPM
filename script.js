@@ -17,7 +17,10 @@ window.addEventListener("click", (e) => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-    window.location.href = "public/login.html";
+    localStorage.removeItem("loggedInUser");
+  console.log("✅ [DEBUG] User logged out. localStorage cleared.");
+    window.location.href = "login";
 });
 
 
+  
