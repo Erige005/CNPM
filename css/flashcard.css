@@ -64,3 +64,20 @@
 .card-actions button#failBtn span.material-symbols-outlined{
     color: #d32f2f;
 }
+
+/* ===== Style cho bảng thống kê ===== */
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.summary-table th,
+.summary-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+.summary-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}

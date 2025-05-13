@@ -346,3 +346,4 @@ function showCongratsModal(){
 document.getElementById('closeCongrats').addEventListener('click',()=>{
   document.getElementById('congratsModal').style.display='none';
 });
+

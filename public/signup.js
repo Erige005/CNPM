@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 alert('Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
-                window.location.href = 'login.html';
+                window.location.href = '/login';
             } else {
                 signupErrorMessage.textContent = result.message;
             }

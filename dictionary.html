@@ -1,60 +1,113 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ứng dụng học tiếng Nhật</title>
-    <link rel="stylesheet" href="css/dictionary.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ứng dụng học tiếng Nhật</title>
+  <link rel="stylesheet" href="css/dictionary.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <style>
+    /* mode-switch buttons */
+    .mode-switch {
+      margin-bottom: 12px;
+    }
+    .mode-btn {
+      margin: 0 4px;
+      padding: 6px 12px;
+      border: 1px solid #666;
+      background: #4F46E5; /* màu xanh khi không được chọn */
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, background-color 0.2s;
+    }
+    /* khi active → mờ đi, đổi nền xám */
+    .mode-btn.active {
+      background: #ddd;
+      color: #000;
+      opacity: 0.6;
+    }
+
+    /* mỗi kết quả */
+    .result-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+    }
+    .result-card h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    /* nút thêm flashcard gọn hơn */
+    .result-card .addBtn {
+      margin-left: 12px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      background-color: #4F46E5;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .result-card .addBtn:hover {
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <aside class="sidebar">
-            <h2>Học Tiếng Nhật</h2>
-            <ul>
-                <li id="home" onclick="navigate('index.html')">
-                    <span class="material-symbols-outlined menu-icon">home</span> Trang chủ
-                </li>
-                <li id="dictionary" class="active" onclick="navigate('dictionary.html')">
-                    <span class="material-symbols-outlined menu-icon">translate</span> Tra từ
-                </li>
-                <li id="flashcard" onclick="navigate('flashcard.html')">
-                    <span class="material-symbols-outlined menu-icon">cards_star</span> Flashcard
-                </li>
-                <li id="jlpt" onclick="navigate('jlpt.html')">
-                    <span class="material-symbols-outlined menu-icon">text_snippet</span> Đề thi JLPT
-                </li>
-                <li id="chatbot" onclick="navigate('chatbot.html')">
-                    <span class="material-symbols-outlined menu-icon">robot_2</span> Chatbot
-                </li>
-            </ul>
-        </aside>        
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Học Tiếng Nhật</h2>
+      <ul>
+        <li id="home" onclick="navigate('index.html')">
+          <span class="material-symbols-outlined menu-icon">home</span> Trang chủ
+        </li>
+        <li id="dictionary" class="active" onclick="navigate('dictionary.html')">
+          <span class="material-symbols-outlined menu-icon">translate</span> Tra từ
+        </li>
+        <li id="flashcard" onclick="navigate('flashcard.html')">
+          <span class="material-symbols-outlined menu-icon">cards_star</span> Flashcard
+        </li>
+        <li id="jlpt" onclick="navigate('jlpt.html')">
+          <span class="material-symbols-outlined menu-icon">text_snippet</span> Đề thi JLPT
+        </li>
+        <li id="chatbot" onclick="navigate('chatbot.html')">
+          <span class="material-symbols-outlined menu-icon">robot_2</span> Chatbot
+        </li>
+      </ul>
+    </aside>
 
-        <!-- Khung đăng nhập -->
-        <header class="user-box">
-            <h2>Tra từ</h2>
-            <div class="user-dropdown">
-                <span class="material-symbols-outlined user-icon" id="userIcon">account_circle</span>
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <div id="logoutBtn">Đăng xuất</div>
-                </div>
-            </div>
-        </header>
+    <header class="user-box">
+      <h2>Tra từ</h2>
+      <div class="user-dropdown">
+        <span class="material-symbols-outlined user-icon" id="userIcon">account_circle</span>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div id="logoutBtn">Đăng xuất</div>
+        </div>
+      </div>
+    </header>
 
-        <main class="content">
-            <div class="search-box">
-                <button id="searchBtn">
-                    <span class="material-symbols-outlined search-icon">search</span>
-                </button>
-                <input type="text" id="searchInput" placeholder="Nhập từ cần tra cứu (ví dụ: 青い)" />
-            </div>
-            <div id="results"></div> <!-- Kết quả trả về sẽ hiển thị ở đây -->
-        </main>
-    </div>
-    
-    <script src="public/search.js"></script>
-    <script src="script.js"></script>
+    <main class="content">
+      <div class="search-box">
+        <div class="mode-switch">
+          <button id="modeJpVi" class="mode-btn active">Nhật → Việt</button>
+          <button id="modeViJp" class="mode-btn">Việt → Nhật</button>
+        </div>
+        <input type="text" id="searchInput" placeholder="Nhập từ cần tra cứu (ví dụ: 青い)" />
+        <button id="searchBtn">
+          <span class="material-symbols-outlined search-icon">search</span>
+        </button>
+      </div>
+      <div id="results"></div>
+    </main>
+  </div>
+
+  <script src="public/search.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
