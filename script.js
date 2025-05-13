@@ -21,6 +21,3 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   console.log("✅ [DEBUG] User logged out. localStorage cleared.");
     window.location.href = "login";
 });
-
-
-  

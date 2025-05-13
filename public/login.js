@@ -1,4 +1,3 @@
-// public/login.js
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const loginErrorMessage = document.getElementById('login-error-message');
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
 
 
