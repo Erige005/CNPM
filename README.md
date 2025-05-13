@@ -34,6 +34,7 @@ ALTER TABLE flashcards
   ADD COLUMN user_id INT NULL AFTER id;
 DELETE FROM flashcards;
 ALTER TABLE flashcards
+
   MODIFY COLUMN user_id INT NOT NULL,
   ADD CONSTRAINT fk_fc_user
     FOREIGN KEY (user_id)
@@ -42,3 +43,29 @@ ALTER TABLE flashcards
     ON UPDATE CASCADE;
 thêm
 npm install express-session express-mysql-session
+
+
+
+
+#thêm 2 bảng điểm
+-CREATE TABLE `07_24` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `score` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_07_user` (`user_id`),
+  CONSTRAINT `07_24_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_07_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+<br>
+
+-CREATE TABLE `12_23` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `score` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_12_user` (`user_id`),
+  CONSTRAINT `12_23_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_12_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
