@@ -17,6 +17,7 @@ window.addEventListener("click", (e) => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("loggedInUser");
+  console.log("✅ [DEBUG] User logged out. localStorage cleared.");
     window.location.href = "login";
 });
-
