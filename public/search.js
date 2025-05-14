@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <p><strong>Hiragana:</strong> ${data.hiragana}</p>
         <p><strong>JLPT level:</strong> ${data.Jlptlevel}</p>
         <p><strong>Từ tương tự:</strong> ${data.similars.join(", ")}</p>
-        <button id="addFlashcardBtn">Thêm vào flash card</button>
+        <button id="addFlashcardBtn">Thêm vào flashcard</button>
       `;
       if (Array.isArray(data.meaning) && data.meaning.length > 0) {
         const list = document.createElement("ul");

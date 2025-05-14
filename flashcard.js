@@ -219,7 +219,7 @@ document.getElementById("viewAllBtn").addEventListener("click", () => {
     .then(data => {
       if (data.success) {
         let html = `
-          <table border="1" style="width:100%; border-collapse:collapse">
+          <table>
             <thead>
               <tr>
                 <th>Từ</th>
