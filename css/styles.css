@@ -131,15 +131,6 @@ header {
 }
 
 
-.test-selector {
-    margin: 20px 0;
-  }
-  
-  .test-selector button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-  }
   
   .paragraph-block {
     background: #f9f9f9;

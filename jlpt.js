@@ -398,17 +398,31 @@ function renderScoreTable(tableName, scores) {
     if (!container) return;
 
     container.innerHTML = `
-        <h3>Bảng điểm ${tableName}</h3>
-        ${scores.length > 0 ? `
-            <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
-                <tr style="background-color: #f0f0f0;">
-                    <th>Điểm</th>
+    <h3 style="margin-bottom: 15px; color: #333;">Bảng điểm ${tableName}</h3>
+
+    ${scores.length > 0 ? `
+        <table style="
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background-color: #fff;
+        ">
+            <thead style="background-color:rgb(160, 59, 218); color: white;">
+                <tr>
+                    <th style="padding: 12px; text-align: center;">Điểm</th>
                 </tr>
+            </thead>
+            <tbody>
                 ${scores.map(score => `
-                    <tr><td>${score}</td></tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px; font-size: 15px; text-align: center;">${score}</td>
+                    </tr>
                 `).join('')}
-            </table>
-        ` : `<p>Chưa có dữ liệu.</p>`}
+            </tbody>
+        </table>
+    ` : `<p style="color: #777; font-style: italic;">Chưa có dữ liệu.</p>`}
     `;
 }
 
