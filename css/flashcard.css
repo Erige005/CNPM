@@ -1,3 +1,12 @@
+#viewAllBtn {
+    margin: 0 15px;
+}
+
+.btn {
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
 #flashcardContainer {
     display: flex;
     flex-direction: column;
@@ -5,35 +14,10 @@
     margin-top: 80px;
 }
   
-.card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    width: 50%;
-    height: 220px;
-    font-size: 2rem;
-    transition: transform 0.3s ease;
-}
-  
-.card p {
-    font-size: 1.4rem;
-    margin-top: 20px;
-}
-  
 .card-actions {
     margin-top: 30px;
     display: flex;
     gap: 40px;
-}
-  
-.card-actions button#showAnswerBtn {
-    padding: 10px 25px;
-    font-size: 1rem;
 }
 
 .card-actions button#passBtn,
@@ -65,19 +49,95 @@
     color: #d32f2f;
 }
 
-/* ===== Style cho bảng thống kê ===== */
-.summary-table {
+/* Style cho bảng thống kê */
+table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin: 1rem 0;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
-.summary-table th,
-.summary-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
+
+table thead {
+  background-color: #D6AB3E;
+  color: white;
+  text-align: left;
+}
+
+table thead th {
+  padding: 12px 15px;
+  font-size: 16px;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+  transition: background 0.2s ease-in-out;
+}
+
+table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+table tbody td {
+  padding: 12px 15px;
+  font-size: 15px;
+}
+
+table td button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f44336;
+  color: white;
+  cursor: pointer;
+}
+
+table td button:hover {
+  background-color: #d32f2f;
+}
+
+.card-container {
+  perspective: 1000px;
+}
+
+.flip-card {
+  width: 450px;
+  height: 180px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
   text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
 }
-.summary-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
 }
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+

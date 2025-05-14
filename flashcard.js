@@ -99,48 +99,45 @@ function displayCurrentFlashcard(showAnswer) {
     document.getElementById("flashcardContainer").innerHTML = "<p>Không có flashcard nào. Vui lòng thêm từ mới.</p>";
     return;
   }
-  
+
   let card = flashcards[currentIndex];
   const container = document.getElementById("flashcardContainer");
-  
-  // Nếu chưa show đáp án, chỉ hiển thị mặt trước
-  if (!showAnswer) {
-    container.innerHTML = `
-      <div class="card">
-        <h2>${card.front}</h2>
+
+  container.innerHTML = `
+    <div class="card-container">
+      <div class="flip-card" id="flipCard">
+        <div class="flip-card-inner ${showAnswer ? 'flipped' : ''}">
+          <div class="flip-card-front">
+            <h2>${card.front}</h2>
+          </div>
+          <div class="flip-card-back">
+            <h2>${card.back}</h2>
+          </div>
+        </div>
       </div>
-      <div class="card-actions">
-        <button id="showAnswerBtn">Hiện đáp án</button>
-      </div>
-    `;
-    document.getElementById("showAnswerBtn").addEventListener("click", function() {
-      displayCurrentFlashcard(true);
-    });
-  } else {
-    // Nếu đã ấn nút hiển thị đáp án, hiện mặt sau và nút Pass/Fail
-    container.innerHTML = `
-      <div class="card">
-        <h2>${card.front}</h2>
-        <p><strong>Đáp án:</strong> ${card.back}</p>
-      </div>
-      <div class="card-actions">
-        <button id="passBtn">
-          <span class="material-symbols-outlined">check</span>
-        </button>
-        <button id="failBtn">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
-    `;
-  
-    document.getElementById("passBtn").addEventListener("click", function() {
-      handlePass(card.id);
-    });
-  
-    document.getElementById("failBtn").addEventListener("click", function() {
-      handleFail(card.id);
-    });
-  }
+    </div>
+    <div class="card-actions">
+      <button id="passBtn">
+        <span class="material-symbols-outlined">check</span>
+      </button>
+      <button id="failBtn">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+  `;
+
+  const flipCard = document.getElementById("flipCard");
+  flipCard.addEventListener("click", () => {
+    document.querySelector(".flip-card-inner").classList.toggle("flipped");
+  });
+
+  document.getElementById("passBtn").addEventListener("click", function () {
+    handlePass(card.id);
+  });
+
+  document.getElementById("failBtn").addEventListener("click", function () {
+    handleFail(card.id);
+  });
 }
 
 function handlePass(cardId) {
@@ -219,7 +216,7 @@ document.getElementById("viewAllBtn").addEventListener("click", () => {
     .then(data => {
       if (data.success) {
         let html = `
-          <table border="1" style="width:100%; border-collapse:collapse">
+          <table>
             <thead>
               <tr>
                 <th>Từ</th>
