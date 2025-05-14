@@ -4,7 +4,7 @@
     gap: 10px;
     background: white;
     border-radius: 25px;
-    padding: 5px;
+    padding: 8px;
     margin-bottom: 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     width: 100%;
@@ -15,6 +15,7 @@
     padding: 10px 15px;
     font-size: 16px;
     border: none;
+    border: 1px solid #3E67D6;
     outline: none;
     border-radius: 20px;
     background: #f0f0f0;
@@ -64,4 +65,50 @@
 
 #results:empty {
     display: none;
+}
+
+/* mode-switch buttons */
+.mode-switch {
+    margin-left: 5px;
+}
+.mode-btn {
+    margin: 0 4px;
+    border: 1px solid #3E67D6;
+    background: #ddd;
+    color: #000;
+    opacity: 0.6;
+}
+
+.mode-btn:hover {
+    background: #ddd;
+}
+
+.mode-btn.active {
+    background: #3E67D6;
+    color: white;
+    opacity: 1;
+}
+
+.mode-btn.active:hover {
+    cursor: default;
+}
+
+/* mỗi kết quả */
+.result-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.result-card h4 {
+    font-size: 1.2rem;
+}
+
+#addFlashcardBtn {
+    margin-top: 5px;
+    margin-bottom: 10px;
 }

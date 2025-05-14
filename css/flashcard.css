@@ -1,3 +1,12 @@
+#viewAllBtn {
+    margin: 0 15px;
+}
+
+.btn {
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
 #flashcardContainer {
     display: flex;
     flex-direction: column;
@@ -65,19 +74,51 @@
     color: #d32f2f;
 }
 
-/* ===== Style cho bảng thống kê ===== */
-.summary-table {
+/* Style cho bảng thống kê */
+table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin: 1rem 0;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
-.summary-table th,
-.summary-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
+
+table thead {
+  background-color: #D6AB3E;
+  color: white;
+  text-align: left;
 }
-.summary-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+
+table thead th {
+  padding: 12px 15px;
+  font-size: 16px;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+  transition: background 0.2s ease-in-out;
+}
+
+table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+table tbody td {
+  padding: 12px 15px;
+  font-size: 15px;
+}
+
+table td button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f44336;
+  color: white;
+  cursor: pointer;
+}
+
+table td button:hover {
+  background-color: #d32f2f;
 }
