@@ -48,11 +48,11 @@
 
             <!-- Các nút chọn đề -->
             <div class="test-selector">
-                <button onclick="loadTest('test_N3_0724.json')">ĐỀ N3 07/2024</button>
+                <button class = "btn" onclick="loadTest('test_N3_0724.json')">ĐỀ N3 07/2024</button>
                
 
 
-                <button onclick="loadTest('test_N3_1223.json')">ĐỀ N3 12/2023</button>
+                <button class="btn" onclick="loadTest('test_N3_1223.json')">ĐỀ N3 12/2023</button>
                 
             
 
@@ -60,8 +60,10 @@
             </div>
             <div id="score-history" style="margin-top: 30px; display:none">
                 <h2>Lịch sử điểm số</h2><div>
-                    <div id="table-07_24"></div>
-                <div id="table-12_23"></div>
+                    <div class="score-tables">
+                        <div class="score-table" id="table-07_24"></div>
+                        <div class="score-table" id="table-12_23"></div>
+                    </div>
                 </div>
                 
             </div>
