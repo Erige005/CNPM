@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 3000;
 
 // ===== 0. Session store cấu hình cho MySQL =====
 const sessionStore = new MySQLStore({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
-  password: '123456',
+  password: 'ruviet135',
 
   database: 'app',
   clearExpired: true,
@@ -24,9 +24,9 @@ const sessionStore = new MySQLStore({
 
 // ===== 1. Kết nối MySQL =====
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
-  password: '123456',
+  password: 'ruviet135',
 
   database: 'app'
 });
@@ -81,7 +81,7 @@ app.get('/jlpt.html',       (req, res) => res.sendFile(path.join(__dirname, 'jlp
 app.get('/chatbot.html',    (req, res) => res.sendFile(path.join(__dirname, 'chatbot.html')));
 
 
-=======
+//=======
 // Session middleware
 app.use(session({
   key: 'session_cookie_name',
@@ -146,7 +146,7 @@ app.post('/login', (req, res) => {
 
 
 
-=======
+//=======
 // Hỗ trợ cả POST '/' cho login (nếu bạn vẫn giữ)
 app.post('/', (req, res) => {
   const { username, password } = req.body;
@@ -400,19 +400,19 @@ app.post('/flashcard/add', requireLogin, (req, res) => {
 
 
 app.post('/submit-score', requireLogin, (req, res) => {
-  const { score, table } = req.body;
+  const { score, testName, table } = req.body;
   const userId = req.session.userId;
 
   console.log('📌 Submitting Score:', { userId, score, table }); // Debug log
 
-  if (!['07_24', '12_23'].includes(table)) {
-    return res.status(400).json({ success: false, message: 'Bảng không hợp lệ.' });
-  }
+  // if (!['07_24', '12_23'].includes(table)) {
+  //   return res.status(400).json({ success: false, message: 'Bảng không hợp lệ.' });
+  // }
 
   // const sql = 'INSERT INTO \`${table}\` (user_id, score) VALUES (?, ?)';
-  const sql = `INSERT INTO ${mysql.escapeId(table)} (user_id, score) VALUES (?, ?)`;
+  const sql = `INSERT INTO ${mysql.escapeId(table)} (user_id, test_name, score) VALUES (?, ?, ?)`;
 
-  db.query(sql, [userId, score], (err,result) => {
+  db.query(sql, [userId, testName, score], (err,result) => {
     if (err) {
       console.error('❌ Lỗi khi lưu điểm:', err);
       return res.json({ success: false, message: 'Lỗi khi lưu điểm.' });
@@ -423,20 +423,47 @@ app.post('/submit-score', requireLogin, (req, res) => {
 
 
 // API để lấy lịch sử điểm số của người dùng
+// app.get('/get-user-scores', requireLogin, (req, res) => {
+//   const userId = req.session.userId;
+//   const result = { success: true, scores: {} };
+
+//   const queries = ['07_24', '12_23'].map(table => {
+//     return new Promise(resolve => {
+//       const sql = `SELECT score FROM \`${table}\` WHERE user_id = ?`;
+//       db.query(sql, [userId], (err, rows) => {
+//         result.scores[table] = err ? [] : rows.map(r => r.score);
+//         resolve();
+//       });
+//     });
+//   });
+
+//   Promise.all(queries).then(() => res.json(result));
+// });
+
 app.get('/get-user-scores', requireLogin, (req, res) => {
   const userId = req.session.userId;
-  const result = { success: true, scores: {} };
 
-  const queries = ['07_24', '12_23'].map(table => {
-    return new Promise(resolve => {
-      const sql = `SELECT score FROM \`${table}\` WHERE user_id = ?`;
-      db.query(sql, [userId], (err, rows) => {
-        result.scores[table] = err ? [] : rows.map(r => r.score);
-        resolve();
-      });
-    });
+  const sql = `
+    SELECT test_name, score, submitted_at
+    FROM test_scores
+    WHERE user_id = ?
+    ORDER BY submitted_at DESC
+  `;
+
+  db.query(sql, [userId], (err, rows) => {
+    if (err) {
+      console.error("❌ Lỗi truy vấn điểm:", err);
+      return res.status(500).json({ success: false, message: "Lỗi máy chủ" });
+    }
+
+    // Gán số thứ tự cho mỗi bản ghi
+    const result = rows.map((row, index) => ({
+      stt: index + 1,
+      test_name: row.test_name,
+      score: row.score,
+      submitted_at: row.submitted_at,
+    }));
+
+    res.json({ success: true, scores: result });
   });
-
-  Promise.all(queries).then(() => res.json(result));
 });
-

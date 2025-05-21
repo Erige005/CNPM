@@ -186,10 +186,31 @@
 
 let currentTestFile = '';
 let currentData = [];
+let testStartTime = Date.now();
 
 window.onload = function () {
     checkLoginAndLoadScores();
 };
+
+// function checkLoginAndLoadScores() {
+//     fetch('/get-user-scores', { credentials: 'include' })
+//         .then(res => {
+//             if (res.status === 401) {
+//                 alert("❌ Bạn chưa đăng nhập! Chuyển về trang đăng nhập.");
+//                 window.location.href = "login";
+//                 throw new Error("Not logged in");
+//             }
+//             return res.json();
+//         })
+//         .then(data => {
+//             if (data.success) {
+//                 renderScoreTable('07_24', data.scores['07_24'] || []);
+//                 renderScoreTable('12_23', data.scores['12_23'] || []);
+//                 document.getElementById("score-history").style.display = "block";
+//             }
+//         })
+//         .catch(err => console.warn(err));
+// }
 
 function checkLoginAndLoadScores() {
     fetch('/get-user-scores', { credentials: 'include' })
@@ -202,18 +223,21 @@ function checkLoginAndLoadScores() {
             return res.json();
         })
         .then(data => {
-            if (data.success) {
-                renderScoreTable('07_24', data.scores['07_24'] || []);
-                renderScoreTable('12_23', data.scores['12_23'] || []);
+            if (data.success && Array.isArray(data.scores)) {
+                renderScoreTable(data.scores);
                 document.getElementById("score-history").style.display = "block";
+            } else {
+                console.warn("⚠️ Dữ liệu điểm không hợp lệ:", data);
             }
         })
-        .catch(err => console.warn(err));
+        .catch(err => console.error(" Lỗi khi tải điểm:", err));
 }
+
 
 function loadTest(filename) {
     currentTestFile = filename;
     document.getElementById("score-history").style.display = "none";
+    document.getElementById("test-container").style.display = "block"
 
     fetch(`test/${filename}`)
         .then(res => res.json())
@@ -338,13 +362,20 @@ function submitTest() {
           
                   if (value === correctAnswer && (!selected || selected.value !== correctAnswer)) {
                     label.style.color = 'green'; // correct, not selected
+                    label.style.backgroundColor = '#e8f5e9';
+                    label.style.fontWeight = 'bold';
                   }
           
                   if (selected && value === selected.value) {
                     if (value === correctAnswer) {
                       label.style.color = 'blue'; // correct chosen
+                      label.style.backgroundColor = '#e0f7fa';
+                      label.style.fontWeight = 'bold';
+
                     } else {
                       label.style.color = 'red'; // wrong chosen
+                      label.style.backgroundColor = '#ffebee';
+                      label.style.fontWeight = 'bold';
                     }
                   }
                 });
@@ -361,14 +392,26 @@ function submitTest() {
 
     showResultPopup(correctCount, questionNumber - 1);
 
-    let table = null;
-if (currentTestFile) {
-    if (currentTestFile.includes("0724")) {
-        table = "07_24";
-    } else if (currentTestFile.includes("1223")) {
-        table = "12_23";
+    const durationSeconds = Math.floor((Date.now() - testStartTime) / 1000);
+
+    let table = 'test_scores';
+    let testName = null;
+// if (currentTestFile) {
+//     if (currentTestFile.includes("0724")) {
+//         table = "07_24";
+//     } else if (currentTestFile.includes("1223")) {
+//         table = "12_23";
+//     }
+// }
+
+    if (currentTestFile) {
+        if (currentTestFile.includes("0724")) {
+            testName = "N3 07_24";
+        } else if (currentTestFile.includes("1223")) {
+            testName = "N3 12_23";
+        }
     }
-}
+
 console.log("📌 Table to Submit:", table);
 
 
@@ -378,13 +421,17 @@ console.log("📌 Table to Submit:", table);
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include', // ⭐ Ensures cookies (session) are sent
 
-            body: JSON.stringify({ score: correctCount, table })
+            body: JSON.stringify({ 
+                score: correctCount, 
+                table,
+                testName 
+            })
         })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 console.log("✅ Điểm đã được lưu thành công.");
-                checkLoginAndLoadScores();
+                //checkLoginAndLoadScores();
             } else {
                 console.error("❌ Không thể lưu điểm:", data.message);
             }
@@ -393,38 +440,77 @@ console.log("📌 Table to Submit:", table);
     }
 }
 
-function renderScoreTable(tableName, scores) {
-    const container = document.getElementById(`table-${tableName}`);
+// function renderScoreTable(tableName, scores) {
+//     const container = document.getElementById(`table-${tableName}`);
+//     if (!container) return;
+
+//     container.innerHTML = `
+//     <h3 style="margin-bottom: 15px; color: #333;">Bảng điểm ${tableName}</h3>
+
+//     ${scores.length > 0 ? `
+//         <table style="
+//             width: 100%;
+//             border-collapse: collapse;
+//             border-radius: 8px;
+//             overflow: hidden;
+//             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+//             background-color: #fff;
+//         ">
+//             <thead style="background-color:rgb(160, 59, 218); color: white;">
+//                 <tr>
+//                     <th style="padding: 12px; text-align: center;">Điểm</th>
+//                 </tr>
+//             </thead>
+//             <tbody>
+//                 ${scores.map(score => `
+//                     <tr style="border-bottom: 1px solid #eee;">
+//                         <td style="padding: 12px; font-size: 15px; text-align: center;">${score}</td>
+//                     </tr>
+//                 `).join('')}
+//             </tbody>
+//         </table>
+//     ` : `<p style="color: #777; font-style: italic;">Chưa có dữ liệu.</p>`}
+//     `;
+// }
+
+function renderScoreTable(scores) {
+    const container = document.getElementById("score-table");
     if (!container) return;
 
     container.innerHTML = `
-    <h3 style="margin-bottom: 15px; color: #333;">Bảng điểm ${tableName}</h3>
 
-    ${scores.length > 0 ? `
-        <table style="
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            background-color: #fff;
-        ">
-            <thead style="background-color:rgb(160, 59, 218); color: white;">
-                <tr>
-                    <th style="padding: 12px; text-align: center;">Điểm</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${scores.map(score => `
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px; font-size: 15px; text-align: center;">${score}</td>
+        ${scores.length > 0 ? `
+            <table style="
+                width: 100%;
+                border-collapse: collapse;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                background-color: #fff;
+            ">
+                <thead style="background-color:rgb(160, 59, 218); color: white;">
+                    <tr>
+                        <th style="padding: 12px; text-align: center;">STT</th>
+                        <th style="padding: 12px; text-align: center;">Tên đề</th>
+                        <th style="padding: 12px; text-align: center;">Điểm</th>
+                        <th style="padding: 12px; text-align: center;">Thời gian nộp</th>
                     </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    ` : `<p style="color: #777; font-style: italic;">Chưa có dữ liệu.</p>`}
+                </thead>
+                <tbody>
+                    ${scores.map(score => `
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 12px; text-align: center;">${score.stt}</td>
+                            <td style="padding: 12px; text-align: center;">${score.test_name}</td>
+                            <td style="padding: 12px; text-align: center;">${score.score}</td>
+                            <td style="padding: 12px; text-align: center;">${new Date(score.submitted_at).toLocaleString('vi-VN')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        ` : `<p style="color: #777; font-style: italic;">Chưa có dữ liệu.</p>`}
     `;
 }
+
 
 function showResultPopup(correct, total) {
     const popup = document.createElement("div");
@@ -453,3 +539,27 @@ function showResultPopup(correct, total) {
 
     document.body.appendChild(popup);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggle-score-btn');
+    const scoreHistory = document.getElementById('score-history');
+    const examContainer = document.getElementById('test-container');
+
+    scoreHistory.style.display = 'none';
+
+    toggleBtn.addEventListener('click', () => {
+        if (scoreHistory.style.display === 'none') {
+            checkLoginAndLoadScores(); // Gọi API + hiển thị bảng
+            scoreHistory.style.display = 'block';
+            toggleBtn.textContent = 'Ẩn bảng điểm';
+
+            if (examContainer) {
+                examContainer.style.display = 'none';
+            }
+        } else {
+            scoreHistory.style.display = 'none';
+            toggleBtn.textContent = 'Hiện bảng điểm';
+
+        }
+    });
+});
