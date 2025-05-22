@@ -79,3 +79,13 @@ CREATE TABLE test_scores (
     CONSTRAINT `ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
+
+CREATE TABLE search (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    word VARCHAR(255) NOT NULL,
+    meaning VARCHAR(255) NOT NULL,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    KEY `i_user` (`user_id`),
+    CONSTRAINT `i_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
