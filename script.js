@@ -21,3 +21,15 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   console.log("✅ [DEBUG] User logged out. localStorage cleared.");
     window.location.href = "login";
 });
+
+function showCustomAlert(message, duration = 2000) {
+  const alertBox = document.getElementById("customAlert");
+  const alertMsg = document.getElementById("customAlertMessage");
+  alertMsg.textContent = message;
+  alertBox.classList.add("show");
+
+  setTimeout(() => {
+    alertBox.classList.remove("show");
+  }, duration);
+}
+
