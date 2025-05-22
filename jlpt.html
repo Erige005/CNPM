@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ứng dụng học tiếng Nhật</title>
-    <link rel="stylesheet" href="css/jlpt.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/jlpt.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 </head>
@@ -55,14 +55,14 @@
                 <button class="btn" onclick="loadTest('test_N3_1223.json')">ĐỀ N3 12/2023</button>
                 
             
-
+                <button id="toggle-score-btn">Hiện bảng điểm</button>
 
             </div>
-            <div id="score-history" style="margin-top: 30px; display:none">
+            <div id="score-history">
                 <h2>Lịch sử điểm số</h2><div>
-                    <div class="score-tables">
-                        <div class="score-table" id="table-07_24"></div>
-                        <div class="score-table" id="table-12_23"></div>
+                    <div id="score-table">
+                        <!-- <div class="score-table" id="table-07_24"></div>
+                        <div class="score-table" id="table-12_23"></div> -->
                     </div>
                 </div>
                 
