@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 const sessionStore = new MySQLStore({
   host: '127.0.0.1',
   user: 'root',
-  password: 'ruviet135',
+  password: '',
 
   database: 'app',
   clearExpired: true,
@@ -26,7 +26,7 @@ const sessionStore = new MySQLStore({
 const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: 'ruviet135',
+  password: '',
 
   database: 'app'
 });
@@ -538,7 +538,7 @@ app.post('/search/add', requireLogin, (req, res) => {
 });
 
 // Lấy danh sách từ vừa tra của user
-app.get('/search', requireLogin, (req, res) => {
+app.get('/searchh', requireLogin, (req, res) => {
   const userId = req.session.userId;
   const sql = `
       SELECT word, meaning

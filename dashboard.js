@@ -76,7 +76,7 @@ function loadUsername() {
 }
 
 function loadRecentWords() {
-  fetch('/search')
+  fetch('/searchh')
     .then(response => response.json())
     .then(data => {
       if (!data.success) {
