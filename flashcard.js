@@ -152,7 +152,8 @@ function handlePass(cardId) {
   .then(data => {
     if (data.success) {
       if (data.removed) {
-        alert("Bạn đã học thành công từ này!");
+        // alert("Bạn đã học thành công từ này!");
+        showCustomAlert("Bạn đã học thành công từ này!");
         // Xóa flashcard khỏi mảng
         flashcards.splice(currentIndex, 1);
         if (flashcards.length === 0) {
