@@ -169,123 +169,6 @@ const qaData = [
 
 let chatHistory = [];
 
-
-
-// // Tính độ tương đồng đơn giản giữa hai chuỗi
-// function stringSimilarity(str1, str2) {
-//   const a = str1.toLowerCase().split(" ");
-//   const b = str2.toLowerCase().split(" ");
-//   const common = a.filter(word => b.includes(word));
-//   return common.length / Math.max(a.length, b.length);
-// }
-
-// // Lấy ra các QA liên quan nhất
-// function getTopRelevantQA(userInput, topK = 2) {
-//   return qaData
-//     .map(item => ({
-//       ...item,
-//       score: stringSimilarity(userInput, item.question)
-//     }))
-//     .sort((a, b) => b.score - a.score)
-//     .slice(0, topK);
-// }
-
-// // Tạo prompt RAG
-// function buildPrompt(userInput) {
-//   const topQA = getTopRelevantQA(userInput);
-//   const context = topQA.map((item, i) => `Q${i + 1}: ${item.question}\nA${i + 1}: ${item.answer}`).join("\n\n");
-  
-//   const history = chatHistory.slice(-5).map((msg, i) => `Lịch sử ${i + 1}: ${msg}`).join("\n");
-
-//   return `
-// Bạn là AI hỗ trợ học tiếng Nhật. Vui lòng **trả lời hoàn toàn bằng tiếng Việt**, chính xác, dễ hiểu và cung cấp ví dụ minh họa nếu có thể.
-
-// Nếu không có thông tin chính xác, hãy trả lời: "**Xin lỗi, tôi chưa có đủ thông tin chính xác để trả lời câu hỏi này.**"
-
-// ${history ? "Lịch sử hội thoại:\n" + history + "\n\n" : ""}
-
-// Dữ kiện tham khảo:
-// ${context}
-
-// **Câu hỏi của người dùng:** ${userInput}
-// `;
-// }
-
-
-//   async function askGemini() {
-//     const input = document.getElementById("question");
-//     const userInput = input.value.trim();
-  
-//     if (!userInput) return;
-  
-//     appendMessage(userInput, "user");
-//     chatHistory.push(`Người dùng: ${userInput}`);
-//     input.value = ""; // Clear input
-//     input.disabled = true;
-  
-//     try {
-//       const res = await fetch(
-//         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-//         {
-//           method: "POST",
-//           headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify({
-//             contents: [{ parts: [{ text: buildPrompt(userInput) }] }]
-//           })
-//         }
-//       );
-  
-//       const data = await res.json();
-//       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
-//       appendMessage(reply, "bot");
-//       chatHistory.push(`Bot: ${reply}`);
-//     } catch (err) {
-//       appendMessage("Something went wrong.", "bot");
-//       console.error(err);
-//     } finally {
-//       input.disabled = false;
-//       input.focus();
-//     }
-//   }
-  
-//   function appendMessage(text, sender) {
-//     const chatBox = document.getElementById("chat-box");
-//     const message = document.createElement("div");
-//     message.className = `message ${sender}-message`;
-//     message.innerHTML = marked.parse(text);
-//     chatBox.appendChild(message);
-//     chatBox.scrollTop = chatBox.scrollHeight;
-//   }
-
-//   // Cho phép nhấn Enter để tìm kiếm
-//   document.addEventListener("DOMContentLoaded", () => {
-//     const input = document.getElementById("question");
-//     const chatBox = document.getElementById("chat-box");
-
-//     // ⚡ Khôi phục lịch sử trò chuyện nếu có
-//     const savedHistory = localStorage.getItem("chatHistory");
-//     if (savedHistory) {
-//       chatBox.innerHTML = savedHistory;
-//       chatBox.scrollTop = chatBox.scrollHeight;
-//     } else {
-//       appendMessage(
-//         `👋 Xin chào! Chào mừng bạn đến với chatbot luyện tiếng Nhật 🇯🇵<br><br>
-//     Tôi có thể giúp bạn:<br>
-//     - Giải thích nghĩa của các cụm từ, câu tiếng Nhật bằng tiếng Việt 🧠<br>
-//     - Trả lời các câu hỏi về ngữ pháp, từ vựng, JLPT<br>
-//     - Gợi ý cách học tiếng Nhật hiệu quả<br><br>
-//     Hãy gõ một câu hoặc cụm từ tiếng Nhật mà bạn muốn tôi giải thích nhé!`,
-//         "bot"
-//       );
-//     }
-
-//     input.addEventListener("keydown", (event) => {
-//       if (event.key === "Enter") {
-//         askGemini();
-//  }
-//     });
-//   });
-
 // 🔁 Hàm gọi Cohere để lấy vector embedding
 async function getEmbedding(text) {
   const res = await fetch("https://api.cohere.ai/v1/embed", {
@@ -340,9 +223,19 @@ async function buildPrompt(userInput) {
   const history = chatHistory.slice(-5).map((msg, i) => `Lịch sử ${i + 1}: ${msg}`).join("\n");
 
   return `
-Bạn là AI hỗ trợ học tiếng Nhật. Vui lòng **trả lời hoàn toàn bằng tiếng Việt**, chính xác, dễ hiểu và cung cấp ví dụ minh họa nếu có thể.
-Nếu không có thông tin chính xác, hãy trả lời: "**Xin lỗi, tôi chưa có đủ thông tin chính xác để trả lời câu hỏi này.**"
+Bạn là một **giáo viên người Việt** giàu kinh nghiệm, chuyên dạy tiếng Nhật cho người học từ **trình độ sơ cấp đến trung cấp** (JLPT N5–N3).
 
+Bạn cần trả lời câu hỏi của người học **hoàn toàn bằng tiếng Việt**, sử dụng tiếng Nhật chỉ khi trích dẫn từ vựng, cấu trúc ngữ pháp hoặc ví dụ minh họa.
+
+ Lưu ý:
+- Trình bày câu trả lời **rõ ràng**, **dễ hiểu**, thân thiện như đang giảng bài trực tiếp.
+- Câu trả lời nên có cấu trúc:
+  1. Định nghĩa hoặc giải thích ngắn gọn
+  2. Diễn giải hoặc ví dụ minh họa bằng tiếng Nhật kèm **phiên âm và dịch nghĩa**
+  3. Mẹo học hoặc lưu ý thêm nếu có
+
+Nếu bạn không có thông tin phù hợp, hãy nói:
+"**Xin lỗi, tôi chưa có đủ thông tin chính xác để trả lời câu hỏi này.**"
 ${history ? "Lịch sử hội thoại:\n" + history + "\n\n" : ""}
 Dữ kiện tham khảo:
 ${context}
