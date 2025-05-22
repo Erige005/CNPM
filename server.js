@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 const sessionStore = new MySQLStore({
   host: '127.0.0.1',
   user: 'root',
-  password: 'ruviet135',
+  password: '123456',
 
   database: 'app',
   clearExpired: true,
@@ -26,7 +26,7 @@ const sessionStore = new MySQLStore({
 const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: 'ruviet135',
+  password: '123456',
 
   database: 'app'
 });
@@ -81,7 +81,7 @@ app.get('/jlpt.html',       (req, res) => res.sendFile(path.join(__dirname, 'jlp
 app.get('/chatbot.html',    (req, res) => res.sendFile(path.join(__dirname, 'chatbot.html')));
 
 
-//=======
+
 // Session middleware
 app.use(session({
   key: 'session_cookie_name',
@@ -146,7 +146,7 @@ app.post('/login', (req, res) => {
 
 
 
-//=======
+
 // Hỗ trợ cả POST '/' cho login (nếu bạn vẫn giữ)
 app.post('/', (req, res) => {
   const { username, password } = req.body;
