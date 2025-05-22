@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
           body: JSON.stringify(flashcardData)
         })
         .then(response => response.json())
-        .then(result => alert(result.message))
+        .then(result => showCustomAlert(result.message))
         .catch(() => alert("Lỗi khi thêm flashcard"));
       });
     } else {
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(flashcardData)
           })
           .then(res => res.json())
-          .then(r => alert(r.message))
+          .then(r => showCustomAlert(r.message))
           .catch(() => alert("Lỗi khi thêm flashcard"));
         });
         resultsContainer.appendChild(card);
