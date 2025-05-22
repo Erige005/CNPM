@@ -1,6 +1,6 @@
 const GEMINI_API_KEY = "AIzaSyC_5YoIudQ8EQ9KGXh7mVzA5DgT30rYe4I";  // Replace with your real key
 
-const COHERE_API_KEY = "T53nwKNikuug3T6v8YnLw37b4v1mjofRUU812pLo";
+const COHERE_API_KEY = "j2TSxa8SCX0iJZTkuYqHEcDndtV6wnylV7q8xyhv";
 
 //test để luyện ai
 const qaData = [
