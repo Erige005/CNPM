@@ -522,3 +522,50 @@ app.get('/user-info', (req, res) => {
     username: req.session.username
   });
 });
+
+// Thêm từ mới tra
+app.post('/search/add', requireLogin, (req, res) => {
+  const { word, meaning } = req.body;
+  const userId = req.session.userId;
+  const sql = 'INSERT INTO search (word, meaning, user_id) VALUES (?, ?, ?)';
+  db.query(sql, [word, meaning, userId], (err, result) => {
+    if (err) {
+      console.error('Lỗi thêm từ', err);
+      return res.json({ success: false, message: "Lỗi khi thêm từ" });
+    }
+    return res.json({ success: true, message: "Từ đã được thêm thành công" });
+  });
+});
+
+// Lấy danh sách từ vừa tra của user
+app.get('/search', requireLogin, (req, res) => {
+  const userId = req.session.userId;
+  const sql = `
+      SELECT word, meaning
+      FROM search
+      WHERE user_id = ?
+      ORDER BY time DESC
+      LIMIT 6
+  `;
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn từ:', err);
+      return res.json({ success: false, message: "Lỗi khi truy vấn từ" });
+    }
+    return res.json({ success: true, search: results });
+  });
+});
+
+// Lấy tổng số từ đã tra của user hiện tại
+app.get('/search/count', requireLogin, (req, res) => {
+  const userId = req.session.userId;
+  const sql = 'SELECT COUNT(*) AS count FROM search WHERE user_id = ?';
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn từ:', err);
+      return res.json({ success: false, message: "Lỗi khi truy vấn từ" });
+    }
+    const count = results[0].count;
+    return res.json({ success: true, count });
+  });
+});

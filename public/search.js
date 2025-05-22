@@ -86,6 +86,18 @@ document.addEventListener("DOMContentLoaded", function() {
           list.appendChild(li);
         });
         resultsContainer.appendChild(list);
+
+        // Lưu từ vào CSDL khi tra xong
+        fetch('/search/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            word: data.lexeme,
+            meaning: Array.isArray(data.meaning)
+              ? data.meaning.map(m => m.meaning).join("; ")
+              : data.meaning
+          })
+        }).catch(err => console.error("Lỗi khi lưu từ:", err));
       } else {
         resultsContainer.innerHTML += "<p>Không tìm thấy nghĩa.</p>";
       }
