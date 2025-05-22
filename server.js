@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 const sessionStore = new MySQLStore({
   host: '127.0.0.1',
   user: 'root',
-  password: '123456',
+  password: 'ruviet135',
 
   database: 'app',
   clearExpired: true,
@@ -26,7 +26,7 @@ const sessionStore = new MySQLStore({
 const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: '123456',
+  password: 'ruviet135',
 
   database: 'app'
 });
@@ -136,6 +136,8 @@ app.post('/login', (req, res) => {
     if (match) {
       // lưu userId vào session
       req.session.userId = user.id;
+      // lưu username
+      req.session.username = user.username;
       return res.json({ success: true, redirect: '/index.html' }); 
 
     } else {
@@ -194,7 +196,7 @@ app.post('/signup', (req, res) => {
           console.error('Lỗi thêm user:', err);
           return res.json({ success: false, message: 'Có lỗi xảy ra.' });
         }
-        return res.redirect('/login');
+        return res.status(200).json({ success: true });
       });
     });
   });
@@ -203,7 +205,6 @@ app.post('/signup', (req, res) => {
 // =====================
 // API cho flashcard (có requireLogin)
 // =====================
-
 // Lưu ý: trước khi chạy, cần ALTER TABLE flashcards ADD COLUMN user_id INT NOT NULL;
 // và thêm FOREIGN KEY nếu muốn:
 //   ALTER TABLE flashcards
@@ -465,5 +466,59 @@ app.get('/get-user-scores', requireLogin, (req, res) => {
     }));
 
     res.json({ success: true, scores: result });
+  });
+});
+
+// Lấy tổng số flashcards của user hiện tại
+app.get('/flashcards/count', requireLogin, (req, res) => {
+  const userId = req.session.userId;
+  const sql = 'SELECT COUNT(*) AS count FROM flashcards WHERE user_id = ?';
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn flashcards:', err);
+      return res.json({ success: false, message: "Lỗi khi truy vấn flashcards" });
+    }
+    const count = results[0].count;
+    return res.json({ success: true, count });
+  });
+});
+
+// Lấy tổng số flashcards đã học của user hiện tại
+app.get('/flashcards/count/learn', requireLogin, (req, res) => {
+  const userId = req.session.userId;
+  const sql = 'SELECT COUNT(*) AS count FROM flashcards WHERE user_id = ? AND is_active = 0';
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn flashcards:', err);
+      return res.json({ success: false, message: "Lỗi khi truy vấn flashcards" });
+    }
+    const count = results[0].count;
+    return res.json({ success: true, count });
+  });
+});
+
+// Lấy tổng số đề đã làm của user hiện tại
+app.get('/get-user-scores/count', requireLogin, (req, res) => {
+  const userId = req.session.userId;
+  const sql = 'SELECT COUNT(DISTINCT test_name) AS count FROM test_scores WHERE user_id = ?';
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn test_scores:', err);
+      return res.json({ success: false, message: "Lỗi khi truy vấn test_scores" });
+    }
+    const count = results[0].count;
+    return res.json({ success: true, count });
+  });
+});
+
+// Lấy thông tin người dùng
+app.get('/user-info', (req, res) => {
+  if (!req.session.userId) {
+    return res.json({ success: false, message: 'Chưa đăng nhập' });
+  }
+  return res.json({
+    success: true,
+    userId: req.session.userId,
+    username: req.session.username
   });
 });

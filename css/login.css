@@ -9,41 +9,52 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden; /* Ngăn chặn thanh cuộn */
 }
 
 .container {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 30px 35px;
+    border-radius: 16px;
     padding: 20px 30px;
     border-radius: 8px;
     width: 300px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #14083c;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .form-group {
     position: relative; /* Needed for absolute positioning */
     margin-bottom: 15px;
+    margin-top: 20px
 }
 
 label {
     display: block;
     margin-bottom: 6px;
-    color: #333;
+    color: #170536;
 }
 
 input[type="text"],
 input[type="password"] {
     width: 100%;
+    height: 50px;
     padding: 8px 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     box-sizing: border-box;
     font-size: 16px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* 🔹 Password warning inside input box */
@@ -66,13 +77,16 @@ input:valid + .password-warning {
 
 button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #4285f4;
     color: #fff;
     font-size: 16px;
+    font-weight: 500;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
 
 button:hover {

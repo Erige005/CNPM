@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ứng dụng học tiếng Nhật</title>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -42,12 +45,100 @@
         </header>
 
         <main class="content">
-            <h1>Chào mừng bạn đến với ứng dụng học tiếng Nhật!</h1>
-            <p>Tra từ điển, ôn tập flashcard, luyện thi JLPT và trò chuyện với chatbot thông minh.</p>
-            <img src="images/theme image.jpg" style="width: 100%; height: auto; border-radius: 10px;">
+
+            <section class="banner">
+                <div class="banner__content">
+                <div class="banner__left">
+                    <h2 class="banner__greeting">こんにちは, <span id="username-display"></span>!</h2>
+                    <p class="banner__message">Tiếp tục phấn đấu nhé!</p>
+                    <button class="banner__button" onclick="navigate('flashcard.html')">Tiếp tục học flashcard</button>
+                </div>
+                <img src="https://cdn-icons-png.flaticon.com/512/1976/1976052.png" alt="Japanese Culture" class="banner__image">
+                </div>
+            </section>
+
+            <section class="starts">
+                <div class="start-card start-card--vocabulary">
+                <div class="start-card__icon">
+                    <span class="material-symbols-outlined">menu_book</span>
+                </div>
+                <div>
+                    <p class="start-card__label">Tổng số Flashcard</p>
+                    <h3 id="voca-count" class="start-card__value"></h3>
+                </div>
+                </div>
+                <div class="start-card start-card--word">
+                <div class="start-card__icon">
+                    <span class="material-symbols-outlined">draw</span>
+                </div>
+                <div>
+                    <p class="start-card__label">Số Flashcard đã học</p>
+                    <h3 id="learn" class="start-card__value"></h3>
+                </div>
+                </div>
+                <div class="start-card start-card--streak">
+                <div class="start-card__icon">
+                    <span class="material-symbols-outlined">star</span>
+                </div>
+                <div>
+                    <p class="start-card__label">Số đề đã làm</p>
+                    <h3 id="exam-count" class="start-card__value"></h3>
+                </div>
+                </div>
+                <div class="start-card start-card--level">
+                <div class="start-card__icon">
+                    <span class="material-symbols-outlined">military_tech</span>
+                </div>
+                <div>
+                    <p class="start-card__label">Mục tiêu hiện tại</p>
+                    <input type="text" class="start-card__value" id="level" value="N4" maxlength="10">
+                </div>
+                </div>
+            </section>
+
+
+            <section class="recent-word">
+                <div class="recent-word__header">
+                <h3 class="recent-word__title">Từ vựng gần đây</h3>
+                </div>
+                <div class="recent-word__list">
+                <div class="word-card">
+                    <div class="word-card__char">日</div>
+                    <div class="word-card__reading">Nhật</div>
+                    <div class="word-card__meaning">Sun, Day</div>
+                </div>
+                <div class="word-card">
+                    <div class="word-card__char">月</div>
+                    <div class="word-card__reading">Nguyệt</div>
+                    <div class="word-card__meaning">Moon, Month</div>
+                </div>
+                <div class="word-card">
+                    <div class="word-card__char">火</div>
+                    <div class="word-card__reading">Hỏa</div>
+                    <div class="word-card__meaning">Fire</div>
+                </div>
+                <div class="word-card">
+                    <div class="word-card__char">水</div>
+                    <div class="word-card__reading">Thủy</div>
+                    <div class="word-card__meaning">Water</div>
+                </div>
+                <div class="word-card">
+                    <div class="word-card__char">木</div>
+                    <div class="word-card__reading">Mộc</div>
+                    <div class="word-card__meaning">Tree, Wood</div>
+                </div>
+                <div class="word-card">
+                    <div class="word-card__char">金</div>
+                    <div class="word-card__reading">Kim</div>
+                    <div class="word-card__meaning">Gold, Money</div>
+                </div>
+                </div>
+            </section>
+     
         </main>
     </div>
 
     <script src="script.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>
