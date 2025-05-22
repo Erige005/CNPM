@@ -89,3 +89,11 @@ CREATE TABLE search (
     KEY `i_user` (`user_id`),
     CONSTRAINT `i_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
+
+INSERT INTO search (user_id, word, meaning, time) VALUES
+(1, '日', 'Nhật - Sun, Day', NOW()),
+(1, '月', 'Nguyệt - Moon, Month', NOW()),
+(1, '火', 'Hỏa - Fire', NOW()),
+(1, '水', 'Thủy - Water', NOW()),
+(1, '木', 'Mộc - Tree, Wood', NOW()),
+(1, '金', 'Kim - Gold, Money', NOW());
