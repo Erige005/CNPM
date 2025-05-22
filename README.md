@@ -97,3 +97,5 @@ INSERT INTO search (user_id, word, meaning, time) VALUES
 (1, '水', 'Thủy - Water', NOW()),
 (1, '木', 'Mộc - Tree, Wood', NOW()),
 (1, '金', 'Kim - Gold, Money', NOW());
+
+node generateQAEmbedding.js (chạy trên cmd của vs code)
